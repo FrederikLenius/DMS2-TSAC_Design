@@ -38,9 +38,9 @@ sf_y_shear = sig_y / sig_vm;       % [-] Safety factor for M6 bolt to yield
 sf_UTS_shear = sig_UTS / sig_vm;   % [-] Safety factor for M6 bolt to UTS
 
 % Pre tension
-F_fric = V_TSAC/n_bolt;           % [F] Friction force per bolt
-F_pre = V_TSAC/(mu*n_bolt);       % [F] Normal force, or pre tension force
-F_pre_lim = 0.7 * sig_y * A;      % [F] Pre tension force limit
+F_fric = V_TSAC/n_bolt;           % [N] Friction force per bolt
+F_pre = V_TSAC/(mu*n_bolt);       % [N] Normal force, or pre tension force
+F_pre_lim = 0.9 * sig_y * A;      % [N] Pre tension force limit
 
 sig_pre = F_pre/A;                % [MPa] Pre tension stress
 T_pre = K * F_pre * (d_nom*1e-3); % [Nm] Pre tension torque
