@@ -22,7 +22,7 @@ epoxies(1).name   = 'MG 9200 FR*';
 epoxies(1).shear  = 10e6;  % [Pa] Al - Al
 
 epoxies(2).name   = 'Permabond TA4230';
-epoxies(2).shear  = 12e6;  % [Pa] CF - Cf
+epoxies(2).shear  = 12e6*0.8;  % [Pa] CF - Cf (80% strength at 60 degC)
 
 epoxies(3).name   = '3M DP100FR*';
 epoxies(3).shear  = 07e6;  % [Pa] Al - Al
@@ -37,17 +37,17 @@ epoxies(5).shear  = 34*0.5*1e6;  % [Pa] Shear strength from tensile strength, co
 %% Stud database
 % Areas found in CAD on Bossard website
 
-studs(1).name  = 'SM1/B20-M5x30';
+studs(1).name  = 'M1/B20-M5x30';
 studs(1).A_top = (152+55+21)*1e-6;         % [m^2] Top bonded area
 studs(1).A_bot = (214+21+7*6)*1e-6;        % [m^2] Bottom bonded area
 studs(1).A_bea = (0.5*pi*1.2*(9.8 + 20.0))*1e-6; % [m^2] Inserted side profile area
 
-studs(2).name  = 'SM1/B23-M5x30';
+studs(2).name  = 'M1/B23-M5x30';
 studs(2).A_top = (213+47+18)*1e-6;         % [m^2]
 studs(2).A_bot = (272+18+7*5)*1e-6;        % [m^2]
 studs(2).A_bea = (0.5*pi*1.2*(9.8 + 23.0))*1e-6; % [m^2] Inserted side profile area
 
-studs(3).name  = 'SM1/B38A-M5x30';
+studs(3).name  = 'M1/B38A-M5x30';
 studs(3).A_top = (725+55+35+6*11)*1e-6;    % [m^2]
 studs(3).A_bot = (798+35+6*11)*1e-6;       % [m^2]
 studs(3).A_bea = (0.5*pi*1.2*(9.8 + 38.0))*1e-6; % [m^2] Inserted side profile area
@@ -248,16 +248,22 @@ writecell({'SR 1126 uses shear stress from Tresca/Mohr''s circle'}, filename, ..
 
 
 % --- Studs sheet ---
-
 stud_names = {stud_results.name}';
+
 A_top_mm2 = [stud_results.Area_top]' * 1e6;
 A_bot_mm2 = [stud_results.Area_bot]' * 1e6;
 A_tot_mm2 = [stud_results.Area_tot]' * 1e6;
+
+A_tot_all_mm2 = [stud_results.Area_tot]' * ns * 1e6;
+A_bot_all_mm2 = [stud_results.Area_bot]' * ns * 1e6;
+
 sig_bea_MPa = [stud_results.sig_bea]' * 1e-6;
 
-T_studs = table(stud_names, A_tot_mm2, A_bot_mm2, A_top_mm2, sig_bea_MPa, ...
-    'VariableNames', {'Stud', 'Total area [mm^2]', 'Bottom area [mm^2]', ...
-    'Top area [mm^2]', 'Bearing stress [MPa]'});
+T_studs = table(stud_names, A_tot_mm2, A_bot_mm2, A_top_mm2, ...
+    A_tot_all_mm2, A_bot_all_mm2, sig_bea_MPa, ...
+    'VariableNames', {'Stud', 'AreaTotal_mm2', 'AreaBottom_mm2', ...
+    'AreaTop_mm2', 'AreaTotal_allStuds_mm2', ...
+    'AreaBottom_allStuds_mm2', 'BearingStress_MPa'});
 
 writetable(T_studs, filename, 'Sheet', 'Studs');
 
