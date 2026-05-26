@@ -4,8 +4,9 @@ clear; clc; close all
 
 % Adheasive strength [MPa]
 % sigma_allow = 36; % Tensile strength from other glue 
-sigma_allow = 7; % Shear strength used 
-tau_allow = 7; 
+
+tau_allow = 12*0.8; 
+sigma_allow = tau_allow; % Shear strength used 
 
 %% Bonded area database [m^2]
 
@@ -244,12 +245,26 @@ writetable(Results, outputFile);
 
 fprintf('\nResults exported to: %s\n', outputFile);
 
-%% Print lowest safety factor case
-worst = Results(1, :);
+%% Print total bonded glue area
 
-fprintf('\nLowest adhesive safety factor:\n');
-fprintf('  SF_min      : %.3f\n', worst.SF_min);
-fprintf('  Edge/Probe   : %s\n', string(worst.Name));
-fprintf('  Load case    : %s\n', string(worst.LoadCase));
-fprintf('  Control mode : %s\n', string(worst.ControlMode));
-fprintf('  Fx, Fy, Fz   : %.3f, %.3f, %.3f N\n', worst.Fx, worst.Fy, worst.Fz);
+totalGlueArea_mm2 = 0;
+
+fprintf('\nBonded glue area summary:\n');
+
+for i = 1:numel(area)
+
+    A_vals_mm2 = [area(i).A_norm_x, area(i).A_norm_y, area(i).A_norm_z];
+    A_vals_mm2(isnan(A_vals_mm2)) = 0;
+
+    A_edge_mm2 = sum(A_vals_mm2);
+    totalGlueArea_mm2 = totalGlueArea_mm2 + A_edge_mm2;
+
+    fprintf('  %-25s : %.2f mm^2\n', ...
+        area(i).PanelNames, ...
+        A_edge_mm2);
+end
+
+fprintf('---------------------------------------------\n');
+fprintf('  %-25s : %.2f mm^2\n\n', ...
+    'Total bonded area', ...
+    totalGlueArea_mm2);

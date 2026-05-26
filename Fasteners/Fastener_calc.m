@@ -4,14 +4,22 @@ clear; clc; close all
 n_bolt  = 6;     % [-] Number of bolts
 
 d_inner = 4.77;  % [mm] Inner bolt diameter
-d_nom   = 6;     % [mm] Nominal bolt diameter
+d_nom   = 6;     % [mm] Nominal bolt diameter 
+A       = 20.1;  % [mm^2] Bolt stress area
+K       = 0.2; % [-] Torque factor for dry bolts
+
+% Grade 8.8 bolts
 sig_UTS = 800;   % [MPa] Bolt UTS 
 grf     = 0.8;   % [-] Bolt grade factor
-A       = 20.1;  % [mm^2] Bolt stress area
-T_lim   = 10.5;  % [Nm] Pre tension torque limit
-K       = 0.125; % [-] Torque factor for dry bolts
+T_lim   = 11.8;  % [Nm] Pre tension torque limit
 
-m_TSAC  = 65;    % [kg] Total TSAC mass
+% Grade 12.9 bolts
+% sig_UTS = 1200;   % [MPa] Bolt UTS 
+% grf     = 0.9;   % [-] Bolt grade factor
+% T_lim   = 19.9;  % [Nm] Pre tension torque limit
+
+
+m_TSAC  = 56;    % [kg] Total TSAC mass
 
 % Friction coefficient
 %mu = 0.5;   % [-] Steel-Steel
@@ -38,9 +46,9 @@ sf_y_shear = sig_y / sig_vm;       % [-] Safety factor for M6 bolt to yield
 sf_UTS_shear = sig_UTS / sig_vm;   % [-] Safety factor for M6 bolt to UTS
 
 % Pre tension
-F_fric = V_TSAC/n_bolt;           % [N] Friction force per bolt
-F_pre = V_TSAC/(mu*n_bolt);       % [N] Normal force, or pre tension force
-F_pre_lim = 0.9 * sig_y * A;      % [N] Pre tension force limit
+F_fric = V_TSAC/n_bolt;           % [F] Friction force per bolt
+F_pre = V_TSAC/(mu*n_bolt);       % [F] Normal force, or pre tension force
+F_pre_lim = 0.7 * sig_y * A;      % [F] Pre tension force limit
 
 sig_pre = F_pre/A;                % [MPa] Pre tension stress
 T_pre = K * F_pre * (d_nom*1e-3); % [Nm] Pre tension torque
